@@ -1,3 +1,9 @@
 {
-    
+    "help_param": "ReLU es un asistente conversacional en tu terminal.\nÚsalo con la siguiente sintaxis: relu [options] [prompt]",
+    "error_act": "Ocurrió un error",
+    "error_desc_clear": "Ocurrió un error al intentar limpiar la memoria de ReLU: {}.",
+    "success_act": "Acción realizada",
+    "success_desc_clear": "La memoria de ReLU ahora está limpia.",
+    "empty_chat": "La conversación con ReLU está vacía.",
+    " ": "Generando texto..."
 }

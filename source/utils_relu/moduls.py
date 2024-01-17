@@ -2,6 +2,15 @@ import pickle, os, json
 
 RUTA_ARCHIVO = "/".join(os.path.abspath(__file__).split("/")[:-1])
 
+def load_json(file="config.json"):
+    try:
+        ruta = f"{RUTA_ARCHIVO}/{file}"
+        file = open(ruta, "r").read()
+        file = json.loads(file)
+        return file
+    except:
+        return None
+
 def load_chat(ruta=f"{RUTA_ARCHIVO}/conversation.pkl"):
     try:
         with open(ruta, "rb") as f:
@@ -32,8 +41,11 @@ FONDO_NEGRO = "\033[33;40m"
 FONDO_NEUTRO = "\033[0m"
 
 NOTIFICATION = YY+"["+GG+"+"+YY+"]"+WW+" {}"
-USER = YY+"|"+BB+"USUARIO"+YY+":"+WW+" {}"
-MODEL = YY+"|"+GG+"MODELO"+YY+":"+WW+" {}"
+USER = YY+"|"+BB+"USER"+YY+":"+WW+" {}"
+MODEL = YY+"|"+GG+"MODEL "+YY+":"+WW+" {}"
+
+ICON_ERROR = f"{RUTA_ARCHIVO}/icons/error.png"
+ICON_CHECK = f"{RUTA_ARCHIVO}/icons/check.png"
 
 prompt_f = f"""Eres un asistente virtual llamado ReLU muy util y rápido, que responde de la manera más corta y directa posible cuando alguien le está pidiendo algo.
 - Si alguien te pide algo, y no tienes mucha información disponible, hazlo igualmente, improvisando y crea EJEMPLOS.

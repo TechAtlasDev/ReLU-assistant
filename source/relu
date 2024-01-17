@@ -3,10 +3,11 @@ import sys, time, notify2, os
 from utils_relu.moduls import *
 
 list_params = sys.argv
-
+JSON_CONFIG = load_json()
+LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
 
 if len(sys.argv) == 1:
-    print (NOTIFICATION.format("ReLU es un asistente conversacional en tu terminal.\nÚsalo con la siguiente sintaxis: relu [options] [prompt]"))
+    print (NOTIFICATION.format(LANG["help_param"]))
     sys.exit()
 
 if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
@@ -14,21 +15,21 @@ if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
     try:
         save_chat(None)
     except Exception as Error:
-        notif = notify2.Notification("Ocurrió un error", f"Ocurrió un error al intentar limpiar la memoria de ReLU: {Error}", icon="/home/prl412/Imágenes/iconos/error.png")
+        notif = notify2.Notification(LANG["error_act"], LANG["error_desc_clear"].format(Error), icon=ICON_ERROR)
     else:
-        notif = notify2.Notification("Acción realizada", "La memoria de ReLU fué limpiada", icon="/home/prl412/Imágenes/iconos/check.png")
+        notif = notify2.Notification(LANG["success_act"], LANG["success_desc_clear"], icon=ICON_CHECK)
     notif.show()
     sys.exit()
 
-if sys.argv[1] == "--remember" or sys.argv[1] == "-r":
+if "--remember" in sys.argv or "-r" in sys.argv:
     conversation = load_chat()
 
     if conversation == None:
-        print (NOTIFICATION.format("La conversación con ReLU está vacía."))
+        print (NOTIFICATION.format(LANG["empty_chat"]))
     else:
         import google.generativeai as genai
 
-        genai.configure(api_key="AIzaSyBD3pwUuwobKmxw982w4UHgGSSEt3CcCQw")
+        genai.configure(api_key=JSON_CONFIG["key_gemini"])
         modelo = genai.GenerativeModel("gemini-pro")
         chat = modelo.start_chat(history=conversation)
         MODELO = conversation[-1]
@@ -41,8 +42,7 @@ prompt = " ".join(sys.argv[1:])
 
 RUTA = os.getcwd()
 
-
-print (NOTIFICATION.format("Generando texto..."))
+print (NOTIFICATION.format(LANG["in_process"]))
 
 import google.generativeai as genai
 
