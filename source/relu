@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+import sys, time, notify2, os
+from utils_relu.moduls import *
+
+list_params = sys.argv
+
+
+if len(sys.argv) == 1:
+    print (NOTIFICATION.format("ReLU es un asistente conversacional en tu terminal.\nÚsalo con la siguiente sintaxis: relu [options] [prompt]"))
+    sys.exit()
+
+if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
+    notify2.init(app_name="ReLU")
+    try:
+        save_chat(None)
+    except Exception as Error:
+        notif = notify2.Notification("Ocurrió un error", f"Ocurrió un error al intentar limpiar la memoria de ReLU: {Error}", icon="/home/prl412/Imágenes/iconos/error.png")
+    else:
+        notif = notify2.Notification("Acción realizada", "La memoria de ReLU fué limpiada", icon="/home/prl412/Imágenes/iconos/check.png")
+    notif.show()
+    sys.exit()
+
+if sys.argv[1] == "--remember" or sys.argv[1] == "-r":
+    conversation = load_chat()
+
+    if conversation == None:
+        print (NOTIFICATION.format("La conversación con ReLU está vacía."))
+    else:
+        import google.generativeai as genai
+
+        genai.configure(api_key="AIzaSyBD3pwUuwobKmxw982w4UHgGSSEt3CcCQw")
+        modelo = genai.GenerativeModel("gemini-pro")
+        chat = modelo.start_chat(history=conversation)
+        MODELO = conversation[-1]
+        USUARIO = conversation[-2]
+        print (f"""Messages: {len(conversation)} | Tokens: {chat.model.count_tokens(contents=conversation)}\n{USER.format(USUARIO.parts[0].text)}\n{MODEL.format(MODELO.parts[0].text)}""")
+    sys.exit()
+
+
+prompt = " ".join(sys.argv[1:])
+
+RUTA = os.getcwd()
+
+
+print (NOTIFICATION.format("Generando texto..."))
+
+import google.generativeai as genai
+
+genai.configure(api_key="AIzaSyBD3pwUuwobKmxw982w4UHgGSSEt3CcCQw")
+modelo = genai.GenerativeModel("gemini-pro")
+
+conversation = load_chat()
+chat = modelo.start_chat(history=conversation)
+
+if conversation == None or len(conversation) >= 50:
+    time.sleep(1)
+    response = chat.send_message(prompt_f)
+    conversation = chat.history
+
+chat = modelo.start_chat(history=conversation)
+
+print("\033[F\033[K", end="")
+
+for evento in chat.send_message(prompt, stream=True):
+    print (FONDO_NEGRO+evento.text, end='', flush=True)
+
+save_chat(chat.history[:50])
+
+print (FONDO_NEUTRO)
