@@ -2,7 +2,7 @@
 import sys, os
 from utils_relu.moduls import *
 
-RUTA_ARCHIVO = "/".join(os.path.abspath(__file__).split("/")[:-1])
+RUTA_ARCHIVO = "~/.relu/"
 list_params = sys.argv
 JSON_CONFIG = load_json()
 LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")

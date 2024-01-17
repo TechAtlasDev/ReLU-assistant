@@ -30,8 +30,11 @@ else
 fi
 
 if [ -d "source" ]; then
-    echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mMoving contents of the source folder to /usr/local/bin..."
-    sudo cp -r source/* /usr/local/bin/
+    echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mMoving contents of the source folder to /usr/local/bin and ~/.relu"
+    sudo mkdir ~/.relu
+    rsync -a --exclude='moduls.py' source/utils_relu/ ~/.relu/
+    sudo mkdir /usr/local/bin/utils_relu
+    sudo cp -r source/utils_relu/moduls.py /usr/local/bin/utils_relu
     echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mDeleting the source folder"
     rm -rf source
 else
