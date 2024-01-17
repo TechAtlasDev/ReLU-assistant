@@ -1,1 +1,1 @@
-![Image](https://cdn.bitlysdowssl-aws.com/wp-content/uploads/2023/12/gemini.jpeg)
+![Image](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpjvG5Qm9NAn1C-ZPRu4PCooJsWBqlH5wy5A&usqp=CAU)
