@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, notify2, os
+import sys, os
 from utils_relu.moduls import *
 
 RUTA_ARCHIVO = "/".join(os.path.abspath(__file__).split("/")[:-1])
@@ -10,8 +10,8 @@ LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
 list_lang = [i[:-len(".json")] for i in os.listdir(f"{RUTA_ARCHIVO}/utils_relu/languages")]
 
 if JSON_CONFIG["language"] not in list_lang:
-    print (ERROR_NOT.format(f"The system detected a non-existent language in the {RUTA_ARCHIVO}/utils_relu/languages directory, resetting it to English."))
-    JSON_CONFIG["language"] = "es"
+    print (ERROR_NOT.format(f"The system detected a non-existent language in the {RUTA_ARCHIVO}/utils_relu/languages directory, resetting it to English.\nAVAILABLE LANGUAGES: {list_lang}"))
+    JSON_CONFIG["language"] = "en"
     save_json(JSON_CONFIG)
     LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
 
@@ -19,8 +19,25 @@ if len(sys.argv) == 1:
     print (NOTIFICATION.format(LANG["help_param"]))
     sys.exit()
 
-if JSON_CONFIG["key_gemini"] == "":
-    print (ERROR_NOT.format(LANG["help_api_key"]))
+if "--name" in sys.argv[1]:
+    try:
+        name = sys.argv[2]
+    except IndexError:
+        print (ERROR_NOT.format(LANG["name_not_found"]))
+        sys.exit()
+
+    JSON_CONFIG["name"] = name
+    save_json(JSON_CONFIG)
+    print (NOTIFICATION.format(LANG["success_save_name"]))
+    sys.exit()
+
+if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
+    try:
+        save_chat(None)
+    except Exception as Error:
+        notifyc(LANG["error_act"], LANG["error_desc_clear"].format(Error), False)
+    else:
+        notifyc(LANG["success_act"], LANG["success_desc_clear"], True)
     sys.exit()
 
 if "--key" in sys.argv[1]:
@@ -44,18 +61,19 @@ if "--lang" in sys.argv[1]:
 
     JSON_CONFIG["language"] = lang
     save_json(JSON_CONFIG)
-    print (NOTIFICATION.format(LANG["success_save_lang"]))
+    LANG = load_json(f"languages/{lang}.json")
+    try:
+        print (NOTIFICATION.format(LANG["success_save_lang"]))
+    except:
+        print (ERROR_NOT.format(f"The system detected a non-existent language in the {RUTA_ARCHIVO}/utils_relu/languages directory, resetting it to English.\nAVAILABLE LANGUAGES: {list_lang}"))
+        JSON_CONFIG["language"] = "en"
+        save_json(JSON_CONFIG)
+        LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
+
     sys.exit()
 
-if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
-    notify2.init(app_name="ReLU")
-    try:
-        save_chat(None)
-    except Exception as Error:
-        notif = notify2.Notification(LANG["error_act"], LANG["error_desc_clear"].format(Error), icon=ICON_ERROR)
-    else:
-        notif = notify2.Notification(LANG["success_act"], LANG["success_desc_clear"], icon=ICON_CHECK)
-    notif.show()
+if JSON_CONFIG["key_gemini"] == "":
+    print (ERROR_NOT.format(LANG["help_api_key"]))
     sys.exit()
 
 if "--remember" in sys.argv or "-r" in sys.argv:
@@ -71,7 +89,7 @@ if "--remember" in sys.argv or "-r" in sys.argv:
         chat = modelo.start_chat(history=conversation)
         MODELO = conversation[-1]
         USUARIO = conversation[-2]
-        print (f"""Messages: {len(conversation)} | Tokens: {chat.model.count_tokens(contents=conversation)}\n{USER.format(USUARIO.parts[0].text)}\n{MODEL.format(MODELO.parts[0].text)}""")
+        print (f"""Messages: {len(conversation)} | Tokens: {chat.model.count_tokens(contents=conversation).total_tokens}\n{USER.format(USUARIO.parts[0].text)}\n{MODEL.format(MODELO.parts[0].text)}""")
     sys.exit()
 
 if sys.argv[1].startswith("-"):
@@ -92,9 +110,13 @@ modelo = genai.GenerativeModel("gemini-pro")
 conversation = load_chat()
 chat = modelo.start_chat(history=conversation)
 
-if conversation == None or len(conversation) >= 50:
+if conversation == None or chat.model.count_tokens(contents=conversation).total_tokens >= 25.000:
+    data_OS = get_dataOS()
+    msg = ""
+    msg += "\n".join([f"- {name}: {data_OS[name]}" for name in data_OS])
+    prompt_f = LANG["prompt_relu"].format(msg)
     response = chat.send_message(prompt_f)
-    conversation = chat.history
+    conversation = chat.history[3:]
 
 chat = modelo.start_chat(history=conversation)
 
