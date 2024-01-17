@@ -9,6 +9,8 @@ echo -e "\e[32m
  ██  ▀██▄  ██▀▀▀▀▀▀  ██        ██    ██ 
  ██    ██  ▀██▄▄▄▄█  ██▄▄▄▄▄▄  ▀██▄▄██▀ 
  ▀▀    ▀▀▀   ▀▀▀▀▀   ▀▀▀▀▀▀▀▀    ▀▀▀▀ 
+
+TechAtlasDev -> https://github.com/TechAtlasDev
 \e[0m"
 
 if [ "$EUID" -ne 0 ]; then
@@ -30,20 +32,12 @@ else
 fi
 
 if [ -d "source" ]; then
-    echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mMoving contents of the source folder to /usr/local/bin and ~/.relu"
-    sudo mkdir ~/.relu
-    rsync -a --exclude='moduls.py' source/utils_relu/ ~/.relu/
-    sudo mkdir /usr/local/bin/utils_relu
-    sudo cp -r source/utils_relu/moduls.py /usr/local/bin/utils_relu
-    sudo cp -r source/relu /usr/local/bin/
-    echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mDeleting the source folder"
-    rm -rf source
+    echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mExporting to ReLU in the PATH variable."
+    export PATH=$PATH:./source
+    chmod +x ./source/relu
 else
     echo "No se encontró la carpeta source en el directorio actual."
     exit 1
 fi
 
-# Eliminar todo lo que se encuentra en el directorio local
-echo "Eliminando el contenido del directorio local..."
-
-echo "Proceso completado exitosamente."
+echo "Process finished."

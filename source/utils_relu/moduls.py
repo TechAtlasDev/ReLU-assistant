@@ -1,6 +1,6 @@
 import pickle, os, json, notify2, platform, psutil
 
-RUTA_ARCHIVO = "~/.relu/"
+RUTA_ARCHIVO = "/".join(os.path.abspath(__file__).split("/")[:-1])
 
 def get_dataOS():
     data = {
@@ -34,7 +34,7 @@ def notifyc(title, body, status):
 
 def load_json(file="config.json"):
     try:
-        ruta = f"~/.relu/{file}"
+        ruta = f"{RUTA_ARCHIVO}/{file}"
         file = open(ruta, "r").read()
         file = json.loads(file)
         return file

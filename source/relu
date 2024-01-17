@@ -2,7 +2,7 @@
 import sys, os
 from utils_relu.moduls import *
 
-RUTA_ARCHIVO = "~/.relu/"
+RUTA_ARCHIVO = "/".join(os.path.abspath(__file__).split("/")[:-1])
 list_params = sys.argv
 JSON_CONFIG = load_json()
 LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
@@ -110,7 +110,7 @@ modelo = genai.GenerativeModel("gemini-pro")
 conversation = load_chat()
 chat = modelo.start_chat(history=conversation)
 
-if conversation == None or chat.model.count_tokens(contents=conversation).total_tokens >= 25.000:
+if conversation == None or chat.model.count_tokens(contents=conversation).total_tokens >= 25000:
     data_OS = get_dataOS()
     msg = ""
     msg += "\n".join([f"- {name}: {data_OS[name]}" for name in data_OS])
@@ -128,6 +128,8 @@ try:
 except Exception as Error:
     if "400 API key not valid" in str(Error).split("\n")[0]:
         print (ERROR_NOT.format(LANG["apikey_invalid"]))
+    else:
+        print (ERROR_NOT.format(Error))
     sys.exit()
 
 save_chat(chat.history[:50])
