@@ -8,5 +8,9 @@
     "in_process": "Generando texto...",
     "help_api_key": "No has establecido alguna KEY para comunicarse con la API de Google!, visita https://ai.google.dev/ y obten tu key!\n\nLuego usa: relu --key TU_API_KEY",
     "param_unrecognized": "El parámetro {} no fué reconocido.",
-    "success_save_apikey": "La KEY fue guardada satisfactoriamente."
+    "success_save_apikey": "La KEY fue guardada satisfactoriamente.",
+    "key_not_found": "Key no encontrada.",
+    "success_save_lang": "El idioma fué establecido.",
+    "lang_not_found": "Lenguaje no encontrado.",
+    "apikey_invalid": "La API KEY establecida no es válida."
 }

@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
-import sys, time, notify2, os
+import sys, notify2, os
 from utils_relu.moduls import *
 
+RUTA_ARCHIVO = "/".join(os.path.abspath(__file__).split("/")[:-1])
 list_params = sys.argv
 JSON_CONFIG = load_json()
 LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
+
+list_lang = [i[:-len(".json")] for i in os.listdir(f"{RUTA_ARCHIVO}/utils_relu/languages")]
+
+if JSON_CONFIG["language"] not in list_lang:
+    print (ERROR_NOT.format(f"The system detected a non-existent language in the {RUTA_ARCHIVO}/utils_relu/languages directory, resetting it to English."))
+    JSON_CONFIG["language"] = "es"
+    save_json(JSON_CONFIG)
+    LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
 
 if len(sys.argv) == 1:
     print (NOTIFICATION.format(LANG["help_param"]))
@@ -15,10 +24,27 @@ if JSON_CONFIG["key_gemini"] == "":
     sys.exit()
 
 if "--key" in sys.argv[1]:
-    key = sys.argv[2]
+    try:
+        key = sys.argv[2]
+    except IndexError:
+        print (ERROR_NOT.format(LANG["key_not_found"]))
+        sys.exit()
+
     JSON_CONFIG["key_gemini"] = key
     save_json(JSON_CONFIG)
     print (NOTIFICATION.format(LANG["success_save_apikey"]))
+    sys.exit()
+
+if "--lang" in sys.argv[1]:
+    try:
+        lang = sys.argv[2]
+    except IndexError:
+        print (ERROR_NOT.format(LANG["lang_not_found"]))
+        sys.exit()
+
+    JSON_CONFIG["language"] = lang
+    save_json(JSON_CONFIG)
+    print (NOTIFICATION.format(LANG["success_save_lang"]))
     sys.exit()
 
 if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
@@ -60,14 +86,13 @@ print (NOTIFICATION.format(LANG["in_process"]))
 
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyBD3pwUuwobKmxw982w4UHgGSSEt3CcCQw")
+genai.configure(api_key=JSON_CONFIG["key_gemini"])
 modelo = genai.GenerativeModel("gemini-pro")
 
 conversation = load_chat()
 chat = modelo.start_chat(history=conversation)
 
 if conversation == None or len(conversation) >= 50:
-    time.sleep(1)
     response = chat.send_message(prompt_f)
     conversation = chat.history
 
@@ -75,8 +100,13 @@ chat = modelo.start_chat(history=conversation)
 
 print("\033[F\033[K", end="")
 
-for evento in chat.send_message(prompt, stream=True):
-    print (FONDO_NEGRO+evento.text, end='', flush=True)
+try:
+    for evento in chat.send_message(prompt, stream=True):
+        print (FONDO_NEGRO+evento.text, end='', flush=True)
+except Exception as Error:
+    if "400 API key not valid" in str(Error).split("\n")[0]:
+        print (ERROR_NOT.format(LANG["apikey_invalid"]))
+    sys.exit()
 
 save_chat(chat.history[:50])
 
