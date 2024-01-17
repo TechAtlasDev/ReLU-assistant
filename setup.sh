@@ -18,6 +18,10 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+current_directory=$(pwd)
+echo "export PATH=\$PATH:$current_directory/source" >> ~/.bashrc
+source ~/.bashrc
+
 if [ -e "requirements.txt" ]; then
     echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mInstalling requirements..."
     pip3 install -r requirements.txt
@@ -26,10 +30,4 @@ else
     exit 1
 fi
 
-echo "--------------------------------------------------"
-
-echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mEl sistema terminó de instalar las dependencias, \e[1;31mahora ejecuta el siguiente comando para que ReLU pueda ejecutarse en tu terminal:\e[0m"
-echo -e "\e[1;36m[\e[34m+\e[1;36m] \e[0m    export PATH=\$PATH:./source"
-
-echo -e "\n\e[1;32m[\e[34m+\e[1;32m] \e[0mThe system finished installing the dependencies, \e[1;31mnow run the following command so that ReLU can run in your terminal:\e[0m"
-echo -e "\e[1;36m[\e[34m+\e[1;36m] \e[0m    export PATH=\$PATH:./source"
+echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mProcess finished, use the 'relu' command."
