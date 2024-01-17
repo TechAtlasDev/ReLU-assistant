@@ -1,9 +1,12 @@
 {
-    "help_param": "ReLU es un asistente conversacional en tu terminal.\nÚsalo con la siguiente sintaxis: relu [options] [prompt]",
+    "help_param": "Ayuda:\n\n    ReLU Script - Una interfaz de línea de comandos para interactuar con un modelo de IA generativa.\n    Este asistente consume la API de Gemini impulsada por Google, lo que permite ser un gran ayudante desde la terminal.\n    Puedes borrar el historial de conversación, ver información sobre la última conversación y más.\n\n  Opciones:\n    --clear, -c        Limpiar la memoria de ReLU para entablar una nueva conversación con ReLU\n    --remember, -r     Muestra la cantidad de tokens, mensajes y 2 ultimos mensajes enviados.\n    --key              Establecer la clave API para la autenticación (https://ai.google.dev/)\n    --help, -h         Mostrar este mensaje de ayuda\n    --lang             Establecer un idioma para el prompt de ReLU y el sistema (2 letras)\n\n  Ejemplos:\n    relu --clear\n    relu --remember\n    relu --help\n    relu --key TU_CLAVE_API\n    relu dame un comando aleatorio de linux\n    relu --lang es\n",
     "error_act": "Ocurrió un error",
     "error_desc_clear": "Ocurrió un error al intentar limpiar la memoria de ReLU: {}.",
     "success_act": "Acción realizada",
     "success_desc_clear": "La memoria de ReLU ahora está limpia.",
     "empty_chat": "La conversación con ReLU está vacía.",
-    " ": "Generando texto..."
+    "in_process": "Generando texto...",
+    "help_api_key": "No has establecido alguna KEY para comunicarse con la API de Google!, visita https://ai.google.dev/ y obten tu key!\n\nLuego usa: relu --key TU_API_KEY",
+    "param_unrecognized": "El parámetro {} no fué reconocido.",
+    "success_save_apikey": "La KEY fue guardada satisfactoriamente."
 }

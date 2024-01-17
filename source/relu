@@ -10,6 +10,17 @@ if len(sys.argv) == 1:
     print (NOTIFICATION.format(LANG["help_param"]))
     sys.exit()
 
+if JSON_CONFIG["key_gemini"] == "":
+    print (ERROR_NOT.format(LANG["help_api_key"]))
+    sys.exit()
+
+if "--key" in sys.argv[1]:
+    key = sys.argv[2]
+    JSON_CONFIG["key_gemini"] = key
+    save_json(JSON_CONFIG)
+    print (NOTIFICATION.format(LANG["success_save_apikey"]))
+    sys.exit()
+
 if sys.argv[1] == "--clear" or sys.argv[1] == "-c":
     notify2.init(app_name="ReLU")
     try:
@@ -37,6 +48,9 @@ if "--remember" in sys.argv or "-r" in sys.argv:
         print (f"""Messages: {len(conversation)} | Tokens: {chat.model.count_tokens(contents=conversation)}\n{USER.format(USUARIO.parts[0].text)}\n{MODEL.format(MODELO.parts[0].text)}""")
     sys.exit()
 
+if sys.argv[1].startswith("-"):
+    print (ERROR_NOT.format(LANG["param_unrecognized"].format(sys.argv[1])))
+    sys.exit()
 
 prompt = " ".join(sys.argv[1:])
 

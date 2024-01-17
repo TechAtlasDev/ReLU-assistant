@@ -1,0 +1,11 @@
+{
+    "help_param": "Help:\n\n    ReLU Script - A command-line interface for interacting with a generative AI model.\n    This assistant consumes the Gemini API powered by Google, allowing it to be a great helper from the terminal.\n    You can clear the conversation history, view information about the last conversation, and more.\n\n  Options:\n    --clear, -c        Clear ReLU's memory to start a new conversation with ReLU\n    --remember, -r     Display the number of tokens, messages, and the last 2 messages sent.\n    --key              Set the API key for authentication (https://ai.google.dev/)\n    --help, -h         Show this help message\n\n  Examples:\n    relu --clear\n    relu --remember\n    relu --help\n    relu --key YOUR_API_KEY\n    relu give me a random linux command",
+    "error_act": "An error occurred",
+    "error_desc_clear": "An error occurred while trying to clear ReLU's memory: {}.",
+    "success_act": "Action performed",
+    "success_desc_clear": "ReLU's memory is now cleared.",
+    "empty_chat": "The conversation with ReLU is empty.",
+    "in_process": "Generating text...",
+    "help_api_key": "You haven't set any KEY to communicate with the Google API! Visit https://ai.google.dev/ and get your key!\n\nThen use: relu --key YOUR_API_KEY",
+    "param_unrecognized": "The parameter {} was not recognized."
+}

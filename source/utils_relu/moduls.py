@@ -11,6 +11,16 @@ def load_json(file="config.json"):
     except:
         return None
 
+def save_json(data, file="config.json"):
+    try:
+        ruta = f"{RUTA_ARCHIVO}/{file}"
+        with open(ruta, "w") as f:
+            json.dump(data, f, indent=4)
+        return True
+    except Exception as e:
+        print(f"Error saving JSON: {e}")
+        return False
+    
 def load_chat(ruta=f"{RUTA_ARCHIVO}/conversation.pkl"):
     try:
         with open(ruta, "rb") as f:
@@ -41,6 +51,7 @@ FONDO_NEGRO = "\033[33;40m"
 FONDO_NEUTRO = "\033[0m"
 
 NOTIFICATION = YY+"["+GG+"+"+YY+"]"+WW+" {}"
+ERROR_NOT = YY+"["+RR+"+"+YY+"]"+WW+" {}"
 USER = YY+"|"+BB+"USER"+YY+":"+WW+" {}"
 MODEL = YY+"|"+GG+"MODEL "+YY+":"+WW+" {}"
 
