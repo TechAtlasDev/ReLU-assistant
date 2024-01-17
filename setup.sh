@@ -31,3 +31,4 @@ else
 fi
 
 echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mProcess finished, use the 'relu' command."
+bash
