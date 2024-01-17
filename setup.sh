@@ -33,7 +33,7 @@ if [ -d "source" ]; then
     echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mMoving contents of the source folder to /usr/local/bin..."
     sudo cp -r source/* /usr/local/bin/
     echo -e "\e[1;32m[\e[34m+\e[1;32m] \e[0mDeleting the source folder"
-    rm -rf souce
+    rm -rf source
 else
     echo "No se encontró la carpeta source en el directorio actual."
     exit 1
