@@ -110,13 +110,15 @@ modelo = genai.GenerativeModel("gemini-pro")
 conversation = load_chat()
 chat = modelo.start_chat(history=conversation)
 
-if conversation == None or chat.model.count_tokens(contents=conversation).total_tokens >= 25000:
+if conversation == None or chat.model.count_tokens(contents=conversation).total_tokens >= 25000 or chat.model.count_tokens(contents=conversation).total_tokens <= 10:
     data_OS = get_dataOS()
     msg = ""
     msg += "\n".join([f"- {name}: {data_OS[name]}" for name in data_OS])
     prompt_f = LANG["prompt_relu"].format(msg)
     response = chat.send_message(prompt_f)
-    conversation = chat.history[3:]
+    conversation = chat.history
+    if chat.model.count_tokens(contents=conversation).total_tokens >= 25000:
+        conversation = chat.history[3:]
 
 chat = modelo.start_chat(history=conversation)
 
