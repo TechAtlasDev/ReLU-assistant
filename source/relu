@@ -65,7 +65,7 @@ if "--lang" in sys.argv[1]:
     try:
         print (NOTIFICATION.format(LANG["success_save_lang"]))
     except:
-        print (ERROR_NOT.format(f"The system detected a non-existent language in the {RUTA_ARCHIVO}/utils_relu/languages directory, resetting it to English.\nAVAILABLE LANGUAGES: {list_lang}"))
+        print (ERROR_NOT.format(f"The system detected a non-existent language in the {RUTA_ARCHIVO}/utils_relu/languages/{lang}.json directory, resetting it to English.\nAVAILABLE LANGUAGES: {list_lang}"))
         JSON_CONFIG["language"] = "en"
         save_json(JSON_CONFIG)
         LANG = load_json(f"languages/{JSON_CONFIG['language']}.json")
